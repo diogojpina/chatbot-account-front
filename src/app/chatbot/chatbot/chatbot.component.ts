@@ -124,7 +124,10 @@ export class ChatbotComponent implements OnInit {
       data => {
         const response = (data as any);
         if (response.success == true) {
-          console.log(response);
+          let option = response.data;
+          console.log(option);
+          this.state = option.code;
+          this.send();
         }
         else {
           this.menuChooseOptionFail(response.message);      
@@ -142,7 +145,54 @@ export class ChatbotComponent implements OnInit {
     this.initMenu();    
   }
 
+  initBalance() {
+    let userMessage :string = this.getUserMessage();
 
+    let accountNumber = '123456';
+
+    this.chatbotRepo.balance(accountNumber).subscribe(
+      data => {
+        const response = (data as any);
+        if (response.success == true) {
+          this.printMessage('bot', 'Your balance is: ' + response.data);
+          this.state = ChatStates.waiting;
+          this.printMessage('bot', 'Prees any key to go back.');
+        }
+        else {
+          this.balanceFail(response.message);      
+        }
+
+      },
+      error => {          
+        this.balanceFail(error.message);    
+      }
+    );
+  }
+
+  balanceFail(errorMessage) {
+    this.printMessage('bot', errorMessage);  
+    this.initMenu();  
+  }
+
+  waiting() {
+    this.initMenu(); 
+  }
+
+  onKeyup(event){
+    if (event.key == "Enter") {
+      this.send();
+      return 0;
+    }
+
+    if (this.state == ChatStates.waiting) {
+      this.userMessage = '';
+      this.send();
+      return 0;
+    }
+    
+    
+    console.log(event)
+  }
 
   printMessage(who, msg) {
     let message :ChatMessage = new ChatMessage(who, msg);
@@ -159,22 +209,29 @@ export class ChatbotComponent implements OnInit {
     switch (this.state) {
       case ChatStates.login:
         this.login();
+        break;
       case ChatStates.menu:
         this.menuChooseOption();
+        break;
       case ChatStates.balance:
         this.initBalance();
+        break;
+      case ChatStates.waiting:
+        this.waiting();
+      default:
     }
   }
   
 }
 
 class ChatStates {
-  static login = 'Login';
-  static signup = 'Signup'
-  static menu = 'Menu';
-  static deposit = 'Deposit';
-  static withdraw = 'Withdraw';
-  static balance = 'Balance';
+  static login = 'login';
+  static signup = 'signup'
+  static menu = 'menu';
+  static deposit = 'deposit';
+  static withdraw = 'withdraw';
+  static balance = 'balance';
+  static waiting = 'waiting';
 }
 
 class LoginData {

@@ -4,7 +4,7 @@
         <p [innerHTML]="message.message"></p>
     </div>
     <div>
-        <input type="text" [(ngModel)]="userMessage" >
+        <input type="text" [(ngModel)]="userMessage" (keyup)="onKeyup($event)">
         <br />
         <input type="button" value="Send" (click)="send()" />
     </div>

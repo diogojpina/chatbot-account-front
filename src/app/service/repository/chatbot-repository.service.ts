@@ -36,6 +36,11 @@ export class ChatbotRepositoryService {
     let url:string = this.baseUrl + "/menu/chooseOption";
     return this.http.post(url, data, this.getHttpOptions());
   }
+
+  balance(accountNumber) {
+    let url:string = this.baseUrl + "/transaction/balance/" + accountNumber;
+    return this.http.get(url, this.getHttpOptions());
+  }
   
   
 
