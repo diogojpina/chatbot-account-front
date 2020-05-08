@@ -1,0 +1,12 @@
+<p>Account Chatbot!</p>
+<div>
+    <div *ngFor="let message of messages">
+        {{message.message}}
+    </div>
+    <div>
+        <input type="text" [(ngModel)]="userMessage" >
+        <br />
+        <input type="button" value="Send" onclick="send()"/>
+    </div>
+</div>
+
