@@ -1,6 +1,6 @@
 <p>Account Chatbot!</p>
 <div>
-    <div *ngFor="let message of messages">
+    <div *ngFor="let message of messages" class="message message-{{message.who}}">
         {{message.message}}
     </div>
     <div>

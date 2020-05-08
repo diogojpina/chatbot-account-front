@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ChatbotRepositoryService } from './../../service/repository/chatbot-repository.service';
+import { AuthService } from './../../service/auth/auth.service';
 
 @Component({
   selector: 'app-chatbot',
@@ -16,7 +17,8 @@ export class ChatbotComponent implements OnInit {
 
   state :string;
 
-  constructor(private chatbotRepo :ChatbotRepositoryService) { }
+  constructor(private chatbotRepo :ChatbotRepositoryService,
+              private authService :AuthService) { }
 
   ngOnInit(): void {
     this.initChat();
@@ -25,15 +27,13 @@ export class ChatbotComponent implements OnInit {
   initChat() {  
     this.messages = new Array();
 
-    let message :ChatMessage = new ChatMessage('bot', 'Welcome!')
-    this.messages.push(message);
+    this.printMessage('bot', 'Welcome!');
     
     this.initLogin();
   }
 
   initLogin() {
-    let message :ChatMessage = new ChatMessage('bot', 'Type your account number or type new to create an account:');
-    this.messages.push(message);
+    this.printMessage('bot', 'Type your account number or type new to create an account:');
 
     this.state = ChatStates.login;
   }
@@ -48,21 +48,56 @@ export class ChatbotComponent implements OnInit {
       this.loginData = new LoginData();
       this.loginData.username = userMessage;
 
-      let message :ChatMessage = new ChatMessage('bot', 'Type your password:');
-      this.messages.push(message);
+      this.printMessage('user', userMessage);
+
+      this.printMessage('bot', 'Type your password:');
       return 0;
     }
     else {
       this.loginData.password = userMessage;
 
-      this.chatbotRepo.login(this.loginData);
+      this.printMessage('user', '******');
+
+      this.chatbotRepo.login(this.loginData).subscribe(
+        data => {
+          const response = (data as any);
+          if (response.success == true) {
+            this.authService.setLocalUserProfile(response.data);
+            this.initMenu();
+          }
+          else {
+            this.loginFail(response.message);            
+          }
+
+        },
+        error => {  
+          this.loginFail(error.message);
+        }
+      );
     }
+  }
+
+  loginFail(errorMessage) {
+    this.printMessage('bot', errorMessage);
+
+    this.initLogin();
   }
 
   initSignup() {
     this.state = ChatStates.signup;
 
     console.log('signup');
+  }
+
+  initMenu() {
+    this.state = ChatStates.menu;
+
+    
+  }
+
+  printMessage(who, msg) {
+    let message :ChatMessage = new ChatMessage(who, msg);
+    this.messages.push(message);
   }
 
   getUserMessage() {
@@ -84,6 +119,7 @@ export class ChatbotComponent implements OnInit {
 class ChatStates {
   static login = 'Login';
   static signup = 'Signup'
+  static menu = 'Menu';
 }
 
 class LoginData {
