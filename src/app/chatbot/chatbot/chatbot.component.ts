@@ -201,6 +201,7 @@ export class ChatbotComponent implements OnInit {
         else {
           this.balanceFail(response.message);      
         }
+
       },
       error => {          
         this.balanceFail(error.message);    
@@ -210,6 +211,47 @@ export class ChatbotComponent implements OnInit {
   }
 
   depositFail(errorMessage) {
+    this.printMessage('bot', errorMessage);  
+    this.initMenu();  
+  }
+
+  initWithdraw() {
+    let userMessage :string = this.getUserMessage();
+
+    if (userMessage) {
+      this.withdraw(userMessage);
+    }
+    else {
+      this.printMessage('bot', 'Type the amount you want to withdraw:');
+    }
+  }
+
+  withdraw(value) {
+    let accountNumber = '123456';
+
+    this.chatbotRepo.withdraw(accountNumber, value).subscribe(
+      data => {
+        const response = (data as any);
+        if (response.success == true) {
+          let transaction :any = response.data;
+          let message = transaction.value + " withdraw made successfully! <br />";
+          message += 'Transaction code: ' + transaction.id;
+          this.printMessage('bot', message);
+          this.state = ChatStates.waiting;
+          this.printMessage('bot', 'Prees any key to go back.');
+        }
+        else {
+          this.withdrawFail(response.message);      
+        }
+      },
+      error => {          
+        this.withdrawFail(error.message);    
+      }
+    );
+
+  }
+
+  withdrawFail(errorMessage) {
     this.printMessage('bot', errorMessage);  
     this.initMenu();  
   }
@@ -255,6 +297,9 @@ export class ChatbotComponent implements OnInit {
         break;
       case ChatStates.deposit:
         this.initDeposit();
+        break;
+      case ChatStates.withdraw:
+        this.initWithdraw();
         break;
       case ChatStates.waiting:
         this.waiting();
