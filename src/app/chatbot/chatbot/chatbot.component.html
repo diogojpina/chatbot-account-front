@@ -1,12 +1,22 @@
-<p>Account Chatbot!</p>
-<div>
-    <div *ngFor="let message of messages" class="message message-{{message.who}}">
-        <p [innerHTML]="message.message"></p>
+<h1>Account Chatbot!</h1>
+<div id="container">
+    <div id="chatbox">
+        <div *ngFor="let message of messages" class="message message-{{message.who}}" [innerHTML]="message.message">
+            <p ></p>
+        </div>
+        
     </div>
-    <div>
+    <div id="input-area">
         <input type="text" [(ngModel)]="userMessage" (keyup)="onKeyup($event)">
         <br />
         <input type="button" value="Send" (click)="send()" />
+    </div>
+
+    <div class="input-group">
+        <input type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+        <div class="input-group-append">
+          <button id="button-addon2" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+        </div>
     </div>
 </div>
 

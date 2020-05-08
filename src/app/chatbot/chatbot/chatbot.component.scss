@@ -1,5 +1,32 @@
-.message {    
+body {
+    background-color: #ccc !important;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+    max-width: 1000px;
+    max-height: 800px;
+    height: 95vh;
+    background: #FFF;
+    border-radius: 10px;
+    border: 1px solid #222;
+    
+}
+
+#content {
+    height: 510px;
+    overflow-y: scroll;
+}
+
+.message {  
+    display: flex; 
+    width: 70%; 
     margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    
 }
 
 .message-bot {
@@ -8,4 +35,10 @@
 
 .message-user {
     background-color: #ecc;
+    margin-left: auto;
+}
+
+.input-area {
+    display: flex;
+    justify-content: flex-end;
 }
