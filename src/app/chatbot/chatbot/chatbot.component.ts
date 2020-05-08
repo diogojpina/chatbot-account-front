@@ -117,7 +117,32 @@ export class ChatbotComponent implements OnInit {
 
   menuChooseOption() {
     let userMessage :string = this.getUserMessage();
+
+    this.printMessage('user', userMessage);
+
+    this.chatbotRepo.menuChooseOption(userMessage).subscribe(
+      data => {
+        const response = (data as any);
+        if (response.success == true) {
+          console.log(response);
+        }
+        else {
+          this.menuChooseOptionFail(response.message);      
+        }
+
+      },
+      error => {          
+        this.menuChooseOptionFail(error.message);    
+      }
+    );
   }
+
+  menuChooseOptionFail(errorMessage) {
+    this.printMessage('bot', errorMessage);    
+    this.initMenu();    
+  }
+
+
 
   printMessage(who, msg) {
     let message :ChatMessage = new ChatMessage(who, msg);
@@ -136,9 +161,10 @@ export class ChatbotComponent implements OnInit {
         this.login();
       case ChatStates.menu:
         this.menuChooseOption();
+      case ChatStates.balance:
+        this.initBalance();
     }
   }
-
   
 }
 
@@ -146,6 +172,9 @@ class ChatStates {
   static login = 'Login';
   static signup = 'Signup'
   static menu = 'Menu';
+  static deposit = 'Deposit';
+  static withdraw = 'Withdraw';
+  static balance = 'Balance';
 }
 
 class LoginData {
