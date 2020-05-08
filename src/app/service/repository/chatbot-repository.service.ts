@@ -26,6 +26,10 @@ export class ChatbotRepositoryService {
     return this.http.post(url, data, this.getHttpOptions());
   }
 
+  menuList() {
+    let url:string = this.baseUrl + "/menu";
+    return this.http.get(url, this.getHttpOptions());
+  }
   
   
 

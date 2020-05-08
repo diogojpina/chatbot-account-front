@@ -29,7 +29,7 @@ export class ChatbotComponent implements OnInit {
 
     this.printMessage('bot', 'Welcome!');
     
-    this.initLogin();
+    this.initMenu();
   }
 
   initLogin() {
@@ -92,7 +92,31 @@ export class ChatbotComponent implements OnInit {
   initMenu() {
     this.state = ChatStates.menu;
 
-    
+    this.chatbotRepo.menuList().subscribe(
+      data => {
+        const response = (data as any);
+        if (response.success == true) {
+          let message :string = 'What do you want to do? <br />';
+          console.log(response.data);
+          for (let option of response.data) {
+            message += '[' + option.code + '] ' + option.name + '<br />';
+          }
+
+          this.printMessage('bot', message);
+        }
+        else {
+          //TODO: treat error            
+        }
+
+      },
+      error => {  
+        //TODO: treat error
+      }
+    );
+  }
+
+  menuChooseOption() {
+    let userMessage :string = this.getUserMessage();
   }
 
   printMessage(who, msg) {
@@ -110,6 +134,8 @@ export class ChatbotComponent implements OnInit {
     switch (this.state) {
       case ChatStates.login:
         this.login();
+      case ChatStates.menu:
+        this.menuChooseOption();
     }
   }
 

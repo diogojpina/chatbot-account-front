@@ -1,7 +1,7 @@
 <p>Account Chatbot!</p>
 <div>
     <div *ngFor="let message of messages" class="message message-{{message.who}}">
-        {{message.message}}
+        <p [innerHTML]="message.message"></p>
     </div>
     <div>
         <input type="text" [(ngModel)]="userMessage" >
