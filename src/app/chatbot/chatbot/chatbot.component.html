@@ -6,7 +6,7 @@
     <div>
         <input type="text" [(ngModel)]="userMessage" >
         <br />
-        <input type="button" value="Send" onclick="send()"/>
+        <input type="button" value="Send" (click)="send()" />
     </div>
 </div>
 
