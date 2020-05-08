@@ -97,7 +97,7 @@ export class ChatbotComponent implements OnInit {
         const response = (data as any);
         if (response.success == true) {
           let message :string = 'What do you want to do? <br />';
-          console.log(response.data);
+
           for (let option of response.data) {
             message += '[' + option.code + '] ' + option.name + '<br />';
           }
@@ -125,7 +125,6 @@ export class ChatbotComponent implements OnInit {
         const response = (data as any);
         if (response.success == true) {
           let option = response.data;
-          console.log(option);
           this.state = option.code;
           this.send();
         }
@@ -174,6 +173,47 @@ export class ChatbotComponent implements OnInit {
     this.initMenu();  
   }
 
+  initDeposit() {
+    let userMessage :string = this.getUserMessage();
+
+    if (userMessage) {
+      this.deposit(userMessage);
+    }
+    else {
+      this.printMessage('bot', 'Type the amount you want to deposit:');
+    }
+  }
+
+  deposit(value) {
+    let accountNumber = '123456';
+
+    this.chatbotRepo.deposit(accountNumber, value).subscribe(
+      data => {
+        const response = (data as any);
+        if (response.success == true) {
+          let transaction :any = response.data;
+          let message = transaction.value + " deposit made successfully! <br />";
+          message += 'Transaction code: ' + transaction.id;
+          this.printMessage('bot', message);
+          this.state = ChatStates.waiting;
+          this.printMessage('bot', 'Prees any key to go back.');
+        }
+        else {
+          this.balanceFail(response.message);      
+        }
+      },
+      error => {          
+        this.balanceFail(error.message);    
+      }
+    );
+
+  }
+
+  depositFail(errorMessage) {
+    this.printMessage('bot', errorMessage);  
+    this.initMenu();  
+  }
+
   waiting() {
     this.initMenu(); 
   }
@@ -189,9 +229,6 @@ export class ChatbotComponent implements OnInit {
       this.send();
       return 0;
     }
-    
-    
-    console.log(event)
   }
 
   printMessage(who, msg) {
@@ -215,6 +252,9 @@ export class ChatbotComponent implements OnInit {
         break;
       case ChatStates.balance:
         this.initBalance();
+        break;
+      case ChatStates.deposit:
+        this.initDeposit();
         break;
       case ChatStates.waiting:
         this.waiting();

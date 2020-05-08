@@ -41,6 +41,12 @@ export class ChatbotRepositoryService {
     let url:string = this.baseUrl + "/transaction/balance/" + accountNumber;
     return this.http.get(url, this.getHttpOptions());
   }
+
+  deposit(accountNumber, value) {
+    let data: any = {value: value};
+    let url:string = this.baseUrl + "/transaction/deposit/" + accountNumber;
+    return this.http.post(url, data, this.getHttpOptions());
+  }
   
   
 
