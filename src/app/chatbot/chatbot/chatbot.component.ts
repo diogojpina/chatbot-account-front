@@ -14,6 +14,7 @@ export class ChatbotComponent implements OnInit {
   userMessage: string;
 
   loginData :LoginData;
+  userData :UserData;
 
   state :string;
 
@@ -26,30 +27,32 @@ export class ChatbotComponent implements OnInit {
 
   initChat() {  
     this.messages = new Array();
+    this.loginData = null;
+    this.userData = null;
 
     this.printMessage('bot', 'Welcome!');
     
     this.initMenu();
   }
-
+ 
   initLogin() {
-    this.printMessage('bot', 'Type your account number or type new to create an account:');
+    this.printMessage('bot', 'Type your "username" or type "signup" to create an account:');
 
     this.state = ChatStates.login;
   }
 
   login() {
     let userMessage :string = this.getUserMessage();
-    if (!this.loginData) {
-      if (userMessage == 'new') {
-        this.initSignup();
-        return 0;
-      }
+    if (userMessage == 'signup') {
+      this.initSignup();
+      return 0;
+    }
+
+    if (!this.loginData) {      
       this.loginData = new LoginData();
       this.loginData.username = userMessage;
 
       this.printMessage('user', userMessage);
-
       this.printMessage('bot', 'Type your password:');
       return 0;
     }
@@ -84,13 +87,78 @@ export class ChatbotComponent implements OnInit {
   }
 
   initSignup() {
-    this.state = ChatStates.signup;
+    this.printMessage('bot', 'Type your firstname:');
 
-    console.log('signup');
+    this.state = ChatStates.signup;
+  }
+
+  signup() {
+    let userMessage :string = this.getUserMessage();
+
+    if (userMessage == 'cancel') {
+      this.initLogin();
+      return false;
+    }
+    if (!this.userData) {
+      this.userData = new UserData();
+      this.userData.firstname = userMessage;
+
+      this.printMessage('user', userMessage);
+      this.printMessage('bot', 'Type your lastname:');
+      return 0;
+    }
+    else if (!this.userData.lastname) {
+      this.userData.lastname = userMessage;
+      this.printMessage('user', userMessage);
+      this.printMessage('bot', 'Type your username:');
+      return 0;
+    }
+    else if (!this.userData.username) {
+      this.userData.username = userMessage;
+      this.printMessage('user', userMessage);
+      this.printMessage('bot', 'Type your password:');
+      return 0;
+    }
+    else if (!this.userData.password) {
+      this.userData.password = userMessage;
+      this.printMessage('user', '******');
+      this.printMessage('bot', 'Type your currency code (USD, EUR, BRL, ...):');
+      return 0;
+    }
+    else {
+      this.userData.currency = userMessage;
+      this.printMessage('user', userMessage);
+
+      this.chatbotRepo.signup(this.userData).subscribe(
+        data => {
+          const response = (data as any);
+          if (response.success == true) {            
+            this.printMessage('bot', 'User and account successfully created.');
+            this.userData = null;
+            this.initLogin();
+          }
+          else {
+            this.signupFail(response.message);            
+          }
+
+        },
+        error => {  
+          console.log('aqui');
+          this.signupFail(error.message);
+        }
+      );
+    }
+  }
+
+  signupFail(errorMessage) {
+    this.printMessage('bot', errorMessage);
+
+    this.initLogin();
   }
 
   initMenu() {
     this.state = ChatStates.menu;
+
 
     this.chatbotRepo.menuList().subscribe(
       data => {
@@ -110,6 +178,7 @@ export class ChatbotComponent implements OnInit {
 
       },
       error => {  
+        console.log(error);
         //TODO: treat error
       }
     );
@@ -147,7 +216,8 @@ export class ChatbotComponent implements OnInit {
   initBalance() {
     let userMessage :string = this.getUserMessage();
 
-    let accountNumber = '123456';
+    let userData = JSON.parse(localStorage.getItem("userProfile"));
+    let accountNumber = userData.account[0].accountNumber;
 
     this.chatbotRepo.balance(accountNumber).subscribe(
       data => {
@@ -155,7 +225,7 @@ export class ChatbotComponent implements OnInit {
         if (response.success == true) {
           this.printMessage('bot', 'Your balance is: ' + response.data);
           this.state = ChatStates.waiting;
-          this.printMessage('bot', 'Prees any key to go back.');
+          this.printMessage('bot', 'Prees any key to continue...');
         }
         else {
           this.balanceFail(response.message);      
@@ -185,7 +255,8 @@ export class ChatbotComponent implements OnInit {
   }
 
   deposit(value) {
-    let accountNumber = '123456';
+    let userData = JSON.parse(localStorage.getItem("userProfile"));
+    let accountNumber = userData.account[0].accountNumber;
 
     this.chatbotRepo.deposit(accountNumber, value).subscribe(
       data => {
@@ -196,7 +267,7 @@ export class ChatbotComponent implements OnInit {
           message += 'Transaction code: ' + transaction.id;
           this.printMessage('bot', message);
           this.state = ChatStates.waiting;
-          this.printMessage('bot', 'Prees any key to go back.');
+          this.printMessage('bot', 'Prees any key to continue...');
         }
         else {
           this.balanceFail(response.message);      
@@ -227,7 +298,8 @@ export class ChatbotComponent implements OnInit {
   }
 
   withdraw(value) {
-    let accountNumber = '123456';
+    let userData = JSON.parse(localStorage.getItem("userProfile"));
+    let accountNumber = userData.account[0].accountNumber;
 
     this.chatbotRepo.withdraw(accountNumber, value).subscribe(
       data => {
@@ -238,7 +310,7 @@ export class ChatbotComponent implements OnInit {
           message += 'Transaction code: ' + transaction.id;
           this.printMessage('bot', message);
           this.state = ChatStates.waiting;
-          this.printMessage('bot', 'Prees any key to go back.');
+          this.printMessage('bot', 'Prees any key to continue...');
         }
         else {
           this.withdrawFail(response.message);      
@@ -285,9 +357,19 @@ export class ChatbotComponent implements OnInit {
   }
 
   send() {
+    if (this.userMessage == 'quit' || this.userMessage == 'bye') {
+      this.userMessage = '';
+      localStorage.removeItem("userProfile");
+      this.initChat();
+      return false;
+    }
+
     switch (this.state) {
       case ChatStates.login:
         this.login();
+        break;
+      case ChatStates.signup:
+        this.signup();
         break;
       case ChatStates.menu:
         this.menuChooseOption();
@@ -322,6 +404,14 @@ class ChatStates {
 class LoginData {
   username: string;
   password: string;
+}
+
+class UserData {
+  firstname :string;
+  lastname :string;
+  username :string;
+  password :string;
+  currency :string;
 }
 
 class ChatMessage {

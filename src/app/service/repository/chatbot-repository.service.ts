@@ -13,7 +13,7 @@ export class ChatbotRepositoryService {
 
   login(data) {
     let url:string = this.baseUrl + "/authentication/login";
-    return this.http.post(url, data, this.getHttpOptions());
+    return this.http.post(url, data, this.getHttpOptionsSimple());
   }
 
   logout() {
@@ -24,6 +24,14 @@ export class ChatbotRepositoryService {
   validateToken(data) {
     let url:string = this.baseUrl + "/authentication/validate";
     return this.http.post(url, data, this.getHttpOptions());
+  }
+
+  signup(data) {
+    const headers :HttpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+    });
+    let url:string = this.baseUrl + "/authentication/signup";
+    return this.http.post(url, data, this.getHttpOptionsSimple());
   }
 
   menuList() {
@@ -65,11 +73,19 @@ export class ChatbotRepositoryService {
     };
   }
 
+  getHttpOptionsSimple() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+  }
+
   getToken() {
     let userData = JSON.parse(localStorage.getItem("userProfile"));
     if(userData) {
        return userData.token;
     }
-    return false;
+    return '';
  }
 }
