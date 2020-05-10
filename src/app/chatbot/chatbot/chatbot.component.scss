@@ -2,21 +2,44 @@ body {
     background-color: #ccc !important;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    width: 5px;
+    background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 1em;
+    background-color: #ddd;
+    outline: 1px solid slategrey;
+    border-radius: 1rem;
+}
+
+h1 {
+    text-align: center;
+}
+
 #container {
     display: flex;
     flex-direction: column;
-    min-width: 800px;
+    width: 90%;
     max-width: 1000px;
-    max-height: 800px;
-    height: 95vh;
+    height: 100vh;
+    max-height: 550px;    
     background: #FFF;
     border-radius: 10px;
     border: 1px solid #222;
-    
+    margin: auto;
+    padding-top: 10px;
+    padding-left: 3px;
+    padding-right: 3px;    
 }
 
-#content {
-    height: 510px;
+#chatbox {
+    height: 80vh;
     overflow-y: scroll;
 }
 
@@ -38,7 +61,19 @@ body {
     margin-left: auto;
 }
 
-.input-area {
-    display: flex;
-    justify-content: flex-end;
+#messagebox {
+    height: 5vh;
+    margin-bottom: 5px;
+}
+
+#messagebox input.text {
+    width: 80%;
+    height: 20px;
+}
+
+#messagebox input.button {
+    width: 20%;
+    background-color: #4CAF50;
+    color: white;
+    
 }

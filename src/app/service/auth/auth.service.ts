@@ -12,7 +12,7 @@ export class AuthService {
   isLoggedIn = false;
 
   constructor(private router : Router,
-               private chabotRepo :ChatbotRepositoryService) { 
+               private chatbotRepo :ChatbotRepositoryService) { 
    }
 
    public async getLocalStorageUser(){

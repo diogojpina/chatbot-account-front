@@ -1,15 +1,14 @@
 <h1>Account Chatbot!</h1>
 <div id="container">
-    <div id="chatbox">
+    <div #chatbox id="chatbox" >
         <div *ngFor="let message of messages" class="message message-{{message.who}}" [innerHTML]="message.message">
             <p ></p>
         </div>
         
     </div>
-    <div id="input-area">
-        <input type="text" [(ngModel)]="userMessage" (keyup)="onKeyup($event)">
-        <br />
-        <input type="button" value="Send" (click)="send()" />
+    <div id="messagebox">
+        <input type="text" [(ngModel)]="userMessage" #usermessage (keyup)="onKeyup($event)" class="text">
+        <input type="button" value="Send" (click)="send()" class="button" />
     </div>
 </div>
 

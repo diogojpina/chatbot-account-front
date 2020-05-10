@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { ChatbotRepositoryService } from './../../service/repository/chatbot-repository.service';
 import { AuthService } from './../../service/auth/auth.service';
@@ -9,6 +9,8 @@ import { AuthService } from './../../service/auth/auth.service';
   styleUrls: ['./chatbot.component.scss']
 })
 export class ChatbotComponent implements OnInit {
+  @ViewChild("usermessage") userMessageField: ElementRef;
+  @ViewChild("chatbox") chatboxDiv: ElementRef;
 
   messages :Array<ChatMessage> = new Array();
   userMessage: string;
@@ -32,10 +34,11 @@ export class ChatbotComponent implements OnInit {
 
     this.printMessage('bot', 'Welcome!');
     
-    this.initMenu();
+    this.initLogin();
   }
  
   initLogin() {
+    this.loginData = null;
     this.printMessage('bot', 'Type your "username" or type "signup" to create an account:');
 
     this.state = ChatStates.login;
@@ -47,6 +50,7 @@ export class ChatbotComponent implements OnInit {
       this.initSignup();
       return 0;
     }
+    
 
     if (!this.loginData) {      
       this.loginData = new LoginData();
@@ -263,7 +267,7 @@ export class ChatbotComponent implements OnInit {
         const response = (data as any);
         if (response.success == true) {
           let transaction :any = response.data;
-          let message = transaction.value + " deposit made successfully! <br />";
+          let message = response.value + " deposit made successfully! <br />";
           message += 'Transaction code: ' + transaction.id;
           this.printMessage('bot', message);
           this.state = ChatStates.waiting;
@@ -306,7 +310,7 @@ export class ChatbotComponent implements OnInit {
         const response = (data as any);
         if (response.success == true) {
           let transaction :any = response.data;
-          let message = transaction.value + " withdraw made successfully! <br />";
+          let message = response.value + " withdraw made successfully! <br />";
           message += 'Transaction code: ' + transaction.id;
           this.printMessage('bot', message);
           this.state = ChatStates.waiting;
@@ -345,9 +349,16 @@ export class ChatbotComponent implements OnInit {
     }
   }
 
-  printMessage(who, msg) {
+  async printMessage(who, msg) {
     let message :ChatMessage = new ChatMessage(who, msg);
     this.messages.push(message);
+
+    if (this.chatboxDiv) {
+      await this.delay(300);
+
+      console.log(this.chatboxDiv.nativeElement.scrollHeight);
+      this.chatboxDiv.nativeElement.scrollTop = this.chatboxDiv.nativeElement.scrollHeight;
+    }
   }
 
   getUserMessage() {
@@ -387,9 +398,17 @@ export class ChatbotComponent implements OnInit {
         this.waiting();
       default:
     }
+
+    this.userMessageField.nativeElement.focus();
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
   
 }
+
+
 
 class ChatStates {
   static login = 'login';
