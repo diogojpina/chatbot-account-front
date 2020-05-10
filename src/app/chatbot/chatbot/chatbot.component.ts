@@ -336,6 +336,13 @@ export class ChatbotComponent implements OnInit {
     this.initMenu(); 
   }
 
+  async logout() {
+    this.userMessage = '';
+    
+    await this.authService.logout();
+    this.initChat();
+  }
+
   onKeyup(event){
     if (event.key == "Enter") {
       this.send();
@@ -368,10 +375,8 @@ export class ChatbotComponent implements OnInit {
   }
 
   send() {
-    if (this.userMessage == 'quit' || this.userMessage == 'bye') {
-      this.userMessage = '';
-      localStorage.removeItem("userProfile");
-      this.initChat();
+    if (this.userMessage == 'quit' || this.userMessage == 'bye' || this.userMessage == 'logout') {
+      this.logout();
       return false;
     }
 

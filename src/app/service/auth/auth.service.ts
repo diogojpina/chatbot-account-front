@@ -66,4 +66,16 @@ export class AuthService {
    	localStorage.setItem("userProfile", JSON.stringify(user));
     this.isLoggedIn = true;
    }
+
+   logout() {  
+    this.chatbotRepo.logout().subscribe(
+      data => {
+          const response = (data as any);
+          if (response.success == true) {
+            this.isLoggedIn = false;
+            localStorage.removeItem("userProfile");
+          }
+      }
+    );
+  }
 }
