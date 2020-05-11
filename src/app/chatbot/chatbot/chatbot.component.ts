@@ -147,7 +147,6 @@ export class ChatbotComponent implements OnInit {
 
         },
         error => {  
-          console.log('aqui');
           this.signupFail(error.message);
         }
       );
@@ -251,6 +250,7 @@ export class ChatbotComponent implements OnInit {
     let userMessage :string = this.getUserMessage();
 
     if (userMessage) {
+      this.printMessage('user', userMessage);
       this.deposit(userMessage);
     }
     else {
@@ -294,6 +294,7 @@ export class ChatbotComponent implements OnInit {
     let userMessage :string = this.getUserMessage();
 
     if (userMessage) {
+      this.printMessage('user', userMessage);
       this.withdraw(userMessage);
     }
     else {

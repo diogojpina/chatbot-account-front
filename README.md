@@ -26,8 +26,18 @@ Usage
 Access:
 [http://localhost:8080][2]
 
-Demo user: diogo
-Demo pass: 123456
+- Demo user: diogo
+- Demo pass: 123456
+
+Follow the instructions to login or signup.
+
+After you will see a menu, type the option you want to access.
+
+To deposit and withdraw you can type in two formats:
+1. USD 100.89 (currency 3 digits + value)
+2. 100.89 (value) - it will use the user preferable currency chose during the signup
+
+All operations will process using user currency preference.
 
 Technologies
 ------------
