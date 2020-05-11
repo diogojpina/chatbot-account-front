@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  chatbot-prod:
+    container_name: chatbot-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:4200'
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      

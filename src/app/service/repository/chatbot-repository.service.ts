@@ -8,7 +8,7 @@ export class ChatbotRepositoryService {
   baseUrl :string;
 
   constructor(public http: HttpClient) {
-    this.baseUrl = 'https://localhost:8000';
+    this.baseUrl = 'http://localhost:8000';
   }
 
   login(data) {
