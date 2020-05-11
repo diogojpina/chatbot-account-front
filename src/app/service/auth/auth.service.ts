@@ -75,7 +75,10 @@ export class AuthService {
             this.isLoggedIn = false;
             localStorage.removeItem("userProfile");
           }
-      }
+      },
+      error => {  
+          this.isLoggedIn = false;
+        }
     );
   }
 }
