@@ -16,8 +16,9 @@ Before run the project, you need to install and run the API. API is hosted on: [
 
 Run the project
 
+```
 $ docker-compose up
-
+```
 Wait until all dependencies are installed, the project is compiled (a line with "Compiled successfully" will appear).
 
 Usage
@@ -30,12 +31,12 @@ Demo pass: 123456
 
 Technologies
 ------------
-Angular 9
-Symfony 5
-PHP 7.4
-Composer
-Docker
-Docker Compose
+- Angular 9
+- Symfony 5
+- PHP 7.4
+- Composer
+- Docker
+- Docker Compose
 
 
 [1]: https://github.com/diogojpina/chatbot-account-api
