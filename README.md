@@ -38,6 +38,11 @@ Technologies
 - Docker
 - Docker Compose
 
+Exchange API
+------------
+I am using [https://api.exchangeratesapi.io] because it is really good and free API.
+
 
 [1]: https://github.com/diogojpina/chatbot-account-api
 [2]: http://localhost:8080
+[3]: https://api.exchangeratesapi.io
