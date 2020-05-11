@@ -1,27 +1,42 @@
-# Chatbot
+Chatbox is a project when the user could access his account and do the following operations:
+- See his balance
+- Deposit 
+- Withdraw
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.4.
+Bonus implemented:
+- Handle currency code validation in the cache.
+- Unit tests
+- Dockerize your application.
 
-## Development server
+Install and Run
+------------
+- Prerequisites: docker and docker-compose, API
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Before run the project, you need to install and run the API. API is hosted on: [https://github.com/diogojpina/chatbot-account-api][1]
 
-## Code scaffolding
+Run the project
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+$ docker-compose up
 
-## Build
+Wait until all dependencies are installed, the project is compiled (a line with "Compiled successfully" will appear).
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Usage
+------------
+Access:
+[http://localhost:8080][2]
 
-## Running unit tests
+Demo user: diogo
+Demo pass: 123456
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Technologies
+------------
+Angular 9
+Symfony 5
+PHP 7.4
+Composer
+Docker
+Docker Compose
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+[1]: https://github.com/diogojpina/chatbot-account-api
+[2]: http://localhost:8080
